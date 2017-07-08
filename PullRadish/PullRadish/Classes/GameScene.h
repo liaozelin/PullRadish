@@ -1,13 +1,13 @@
 #pragma once
-
-#include "cocos2d.h"
+#include"AppDelegate.h"
 #include <string>
-#include "SimpleAudioEngine.h"
+USING_NS_CC;
 
-using std::string;
+using namespace std;
 
 class GameScene : public cocos2d::Layer
 {
+	
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
@@ -21,12 +21,14 @@ public:
     /*
      * 将背景放置在游戏界面的右边，以实现背景无限滚动
      * @param: bg 要操作的背景指针
-     */
+	 */
+     
     void set_bg_right(Sprite* bg);
     /*
      * 将背景放置在游戏界面的左边，以实现背景无限滚动
      * @param: bg 要操作的背景指针
-     */
+	 */
+     
     void set_bg_left(Sprite* bg);
 
     void score_increase();
@@ -37,9 +39,27 @@ public:
     //      3.当最后一个萝卜离最右边界一定距离时新增一个萝卜(萝卜向右增长)
     // 玩家按下左右键移动时，实际上移动的不是player，
     // 而是背景和萝卜们，看起来就像是玩家在移动。
-    void update(float dt);
+    //void update(float dt);
     // 调度器： 倒计时
     void time_decrease(float dt);
+
+	//萝卜1的动画
+	void carrot1_animation();
+
+	//萝卜2的动画
+	void carrot2_animation();
+
+	//萝卜3的动画
+	void carrot3_animation();
+
+	//初始化萝卜1
+	Sprite* carrot1_init();
+
+	//初始化萝卜2
+	Sprite* carrot2_init();
+
+	//初始化萝卜3
+	Sprite* carrot3_init();
 
 private:
     void preloadMusic();
@@ -48,8 +68,8 @@ private:
     void addKeyboardListener();
 
     // 按下键盘按键和松开按键触发函数，在其中完成事件判断
-    void onKeyPressed(EventKeyboard::KeyCode code, Event* event);
-    void onKeyReleased(EventKeyboard::KeyCode code, Event* event);
+    //void onKeyPressed(EventKeyboard::KeyCode code, Event* event);
+    //void onKeyReleased(EventKeyboard::KeyCode code, Event* event);
 
     // 在最后一个萝卜右边添加一个新的萝卜
     void addRadish();
