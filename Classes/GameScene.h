@@ -1,10 +1,10 @@
 #pragma once
-#include"AppDelegate.h"
-#include <string>
+#include "cocos2d.h"
+#include "SimpleAudioEngine.h"
+
 USING_NS_CC;
-
 using namespace std;
-
+using namespace CocosDenshion;
 class GameScene : public cocos2d::Layer
 {
 	
@@ -52,6 +52,9 @@ public:
 	//萝卜3的动画
 	void carrot3_animation();
 
+	//人物移动动画
+	void player_move();
+
 	//初始化萝卜1
 	Sprite* carrot1_init();
 
@@ -60,6 +63,9 @@ public:
 
 	//初始化萝卜3
 	Sprite* carrot3_init();
+
+	//初始任人物
+	Sprite* player_init();
 
 private:
     void preloadMusic();

@@ -1,7 +1,8 @@
 #include "GameScene.h"
-
+#include <algorithm>
 USING_NS_CC;
 
+using namespace std;
 cocos2d::Scene* GameScene::createScene() {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
@@ -35,24 +36,45 @@ bool GameScene::init() {
 	//创建萝卜3的动画
 	carrot3_animation();
 
-	/*测试动画是否有问题（可删）
+	//创建人物动画
+	player_move();
+
+	//创建背景
+	auto bg_game = Sprite::create("background1.jpg");
+	bg_game->setPosition(Vec2(origin.x + size.width/2, origin.y + size.height/2));
+	this->addChild(bg_game, 0);
+
+	//初始化人物
+	player = player_init();
+	Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
+	player->runAction(RepeatForever::create(moveAnimate));
+	player->setPosition(250 + origin.x, origin.y + 102);
+	this->addChild(player, 1);
+
+	preloadMusic();     // 预加载音乐
+	playBgm();          // 播放背景音乐
+
+
+	//测试动画是否有问题（可删）
 	Sprite* carrot1 = carrot1_init();
 	Animate* carrot1Animate = Animate::create(AnimationCache::getInstance()->getAnimation("carrot1Animation"));
-	carrot1->runAction(RepeatForever::create(carrot1Animate));
+	//carrot1->runAction(RepeatForever::create(carrot1Animate));
 	carrot1->setPosition(110 + origin.x, origin.y + 102);
 	this->addChild(carrot1, 1);
 
 	Sprite* carrot2 = carrot2_init();
 	Animate* carrot2Animate = Animate::create(AnimationCache::getInstance()->getAnimation("carrot2Animation"));
-	carrot2->runAction(RepeatForever::create(carrot2Animate));
-	carrot2->setPosition(150 + origin.x, origin.y + 250);
+	//carrot2->runAction(RepeatForever::create(carrot2Animate));
+	carrot2->setPosition(150 + origin.x, origin.y + 102);
 	this->addChild(carrot2, 1);
 
 	Sprite* carrot3 = carrot3_init();
 	Animate* carrot3Animate = Animate::create(AnimationCache::getInstance()->getAnimation("carrot3Animation"));
-	carrot3->runAction(RepeatForever::create(carrot3Animate));
-	carrot3->setPosition(200 + origin.x, origin.y + 300);
-	this->addChild(carrot3, 1);*/
+	//carrot3->runAction(RepeatForever::create(carrot3Animate));
+	carrot3->setPosition(200 + origin.x, origin.y + 102);
+	this->addChild(carrot3, 1);
+
+
 
     return true;
 }
@@ -126,4 +148,36 @@ Sprite* GameScene::carrot3_init() {
 	return carrot3;
 }
 
+//人物移动动画
+void GameScene::player_move() {
+	Animation* moveAnimation = Animation::create();
+	auto texture1 = Director::getInstance()->getTextureCache()->addImage("player.png");
+	for (int i = 0; i < 4; i++)
+	{
+		auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(90 * i, 0, 90, 93)));
+		moveAnimation->addSpriteFrame(frame);
+	}
+	moveAnimation->setDelayPerUnit(1);
+	AnimationCache::getInstance()->addAnimation(moveAnimation, "moveAnimation");
+}
 
+//初始化人物
+Sprite* GameScene::player_init() {
+	auto texture = Director::getInstance()->getTextureCache()->addImage("player.png");
+	auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 90, 93)));
+	auto player1 = Sprite::createWithSpriteFrame(frame);
+	return player1;
+}
+
+//预加载背景音乐
+void GameScene::preloadMusic() {
+	auto audio = SimpleAudioEngine::getInstance();
+	audio->preloadBackgroundMusic("bgm/bgm_3.mp3");
+}
+
+
+//播放背景音乐
+void GameScene::playBgm() {
+	auto audio = SimpleAudioEngine::getInstance();
+	audio->playBackgroundMusic("bgm/bgm_3.mp3");
+}
