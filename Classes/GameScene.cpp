@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "MenuScene.h"
 #include "ui/CocosGUI.h"
 #include <algorithm>
 
@@ -9,8 +10,12 @@ using namespace CocosDenshion;
 
 const string GameScene::NAME_UP = "W";
 const string GameScene::NAME_DOWN = "S";
-const int GameScene::LEVEL = 100;
+const int GameScene::LEVEL = 80;
 const int GameScene::SPACE = 100;
+
+const string c1 = "1";
+const string c2 = "2";
+const string c3 = "3";
 
 cocos2d::Scene* GameScene::createScene(int target, int count) {
     // 'scene' is an autorelease object
@@ -79,10 +84,12 @@ bool GameScene::init() {
     bg2 = Sprite::create("background1.jpg");
     bg2->setAnchorPoint(Vec2(0, 0));
     bg2->setPosition(Vec2(bg1->getBoundingBox().getMaxX(), 0));
+    bg2->setFlippedX(true);
     this->addChild(bg2, -5);
     // 创建人物
     player = player_init();
-    
+    //Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
+    //playerAction = player->runAction(moveAnimate);
     player->setPosition(Vec2(visibleSize.width / 2, LEVEL));
     this->addChild(player, 3);
     // 创建萝卜
@@ -128,8 +135,10 @@ void GameScene::set_bg(int flag) {
 void GameScene::world_move(int distance) {
     bg1->runAction(MoveBy::create(0.04f, Vec2(distance, 0)));
     bg2->runAction(MoveBy::create(0.04f, Vec2(distance, 0)));
-	Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
-    player->runAction(moveAnimate);
+    if (player->numberOfRunningActions() == 0) {
+        Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
+        playerAction = player->runAction(moveAnimate);
+    }
     if (distance < 0) { // 人物向右走，背景向左移动
         if (bg1->getBoundingBox().getMaxX() <= 0)
             set_bg(1);
@@ -172,12 +181,12 @@ void GameScene::game_over() {
         result->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2 + 100));
         layer->addChild(result);
 
-        auto nameField = TextField::create("Input Your Name Here", "Arial", 30);
+        /*auto nameField = TextField::create("Input Your Name Here", "Arial", 30);
         nameField->setTextColor(Color4B::BLACK);
         nameField->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-        layer->addChild(nameField);
+        layer->addChild(nameField);*/
 
-        auto button = MenuItemFont::create("Submit", CC_CALLBACK_1(GameScene::gameoverButtonCallback, this));
+        auto button = MenuItemFont::create("Home", CC_CALLBACK_1(GameScene::gameoverButtonCallback, this));
         button->setColor(Color3B::BLACK);
         button->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2 - 50));
         auto menu = Menu::create(button, NULL);
@@ -208,7 +217,8 @@ void GameScene::passButtonCallback(Ref * pSender) {
 }
 
 void GameScene::gameoverButtonCallback(Ref * pSender) {
-
+    auto sc = MenuScene::createScene();
+    Director::getInstance()->pushScene(sc);
 }
 
 // 默认调度器，实现:
@@ -328,9 +338,18 @@ void GameScene::onKeyReleased(EventKeyboard::KeyCode code, Event* event) {
 void GameScene::addRadish(int x) {
     int t = cocos2d::RandomHelper::random_int(1, 3);
     Sprite* new_radish;
-    if (t == 1) new_radish = carrot1_init();
-    else if (t == 2) new_radish = carrot2_init();
-    else new_radish = carrot3_init();
+    if (t == 1) {
+        new_radish = carrot1_init();
+        new_radish->setName(c1);
+    }
+    else if (t == 2) {
+        new_radish = carrot2_init();
+        new_radish->setName(c2);
+    }
+    else {
+        new_radish = carrot3_init();
+        new_radish->setName(c2);
+    }
     new_radish->setPosition(Vec2(x, LEVEL));
     this->addChild(new_radish, 2);
     radishes.push_back(new_radish);
@@ -339,8 +358,14 @@ void GameScene::addRadish(int x) {
 void GameScene::removeRadish() {
     if (radishes.size() == 0) return;
     radishes.remove(radish_selected);
-    radish_selected->removeFromParentAndCleanup(false);
-    radish_selected = NULL;
+    string t = "carrot" + radish_selected->getName() + "Animation";
+    Animate* animate = Animate::create(AnimationCache::getInstance()->getAnimation(t));
+    auto seq = Sequence::create(animate,
+        CallFunc::create([=]() {
+        radish_selected->removeFromParentAndCleanup(false);
+        radish_selected = NULL;
+    }), nullptr);
+    radish_selected->runAction(seq);
 }
 
 void GameScene::showOperations() {
@@ -406,7 +431,7 @@ void GameScene::carrot1_animation() {
         auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 37, 1 * i + 20)));
         carrot1Animation->addSpriteFrame(frame);
     }
-    carrot1Animation->setDelayPerUnit(0.05);
+    carrot1Animation->setDelayPerUnit(0.005);
     AnimationCache::getInstance()->addAnimation(carrot1Animation, "carrot1Animation");
 }
 
@@ -419,7 +444,7 @@ void GameScene::carrot2_animation() {
         auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 41, 1 * i + 20)));
         carrot1Animation->addSpriteFrame(frame);
     }
-    carrot1Animation->setDelayPerUnit(0.05);
+    carrot1Animation->setDelayPerUnit(0.005);
     AnimationCache::getInstance()->addAnimation(carrot1Animation, "carrot2Animation");
 }
 
@@ -432,7 +457,7 @@ void GameScene::carrot3_animation() {
         auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 61, 1 * i + 20)));
         carrot1Animation->addSpriteFrame(frame);
     }
-    carrot1Animation->setDelayPerUnit(0.05);
+    carrot1Animation->setDelayPerUnit(0.005);
     AnimationCache::getInstance()->addAnimation(carrot1Animation, "carrot3Animation");
 }
 
@@ -463,20 +488,20 @@ Sprite* GameScene::carrot3_init() {
 //人物移动动画
 void GameScene::player_move() {
     Animation* moveAnimation = Animation::create();
-    auto texture1 = Director::getInstance()->getTextureCache()->addImage("player1.png");
     for (int i = 0; i < 8; i++)
     {
-        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(95.8 * i, 0, 95.8, 90)));
+        auto texture1 = Director::getInstance()->getTextureCache()->addImage("player_" + to_string(i) + ".png");
+        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 44, 77)));
         moveAnimation->addSpriteFrame(frame);
     }
-    moveAnimation->setDelayPerUnit(0.05);
+    moveAnimation->setDelayPerUnit(0.1);
     AnimationCache::getInstance()->addAnimation(moveAnimation, "moveAnimation");
 }
 
 //初始化人物
 Sprite* GameScene::player_init() {
-    auto texture = Director::getInstance()->getTextureCache()->addImage("player1.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(670, 0, 95.8, 90)));
+    auto texture = Director::getInstance()->getTextureCache()->addImage("player_1.png");
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 44, 77)));
     auto player1 = Sprite::createWithSpriteFrame(frame);
     return player1;
 }

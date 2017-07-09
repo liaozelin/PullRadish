@@ -97,6 +97,8 @@ private:
 
     Size visibleSize;
     Vec2 origin;
+
+    Action* playerAction;
     
     list<Sprite*> radishes;  // 萝卜列表
     Sprite* radish_selected;  // 标记人物选中的萝卜
