@@ -463,20 +463,20 @@ Sprite* GameScene::carrot3_init() {
 //人物移动动画
 void GameScene::player_move() {
     Animation* moveAnimation = Animation::create();
-    auto texture1 = Director::getInstance()->getTextureCache()->addImage("player.png");
-    for (int i = 0; i < 4; i++)
+    auto texture1 = Director::getInstance()->getTextureCache()->addImage("player1.png");
+    for (int i = 0; i < 8; i++)
     {
-        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(90 * i, 0, 90, 90)));
+        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(95.8 * i, 0, 95.8, 90)));
         moveAnimation->addSpriteFrame(frame);
     }
-    moveAnimation->setDelayPerUnit(0.2);
+    moveAnimation->setDelayPerUnit(0.05);
     AnimationCache::getInstance()->addAnimation(moveAnimation, "moveAnimation");
 }
 
 //初始化人物
 Sprite* GameScene::player_init() {
-    auto texture = Director::getInstance()->getTextureCache()->addImage("player.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 90, 90)));
+    auto texture = Director::getInstance()->getTextureCache()->addImage("player1.png");
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(670, 0, 95.8, 90)));
     auto player1 = Sprite::createWithSpriteFrame(frame);
     return player1;
 }
