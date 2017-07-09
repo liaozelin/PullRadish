@@ -82,8 +82,7 @@ bool GameScene::init() {
     this->addChild(bg2, -5);
     // 创建人物
     player = player_init();
-    Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
-    player->runAction(RepeatForever::create(moveAnimate));
+    
     player->setPosition(Vec2(visibleSize.width / 2, LEVEL));
     this->addChild(player, 3);
     // 创建萝卜
@@ -129,6 +128,8 @@ void GameScene::set_bg(int flag) {
 void GameScene::world_move(int distance) {
     bg1->runAction(MoveBy::create(0.04f, Vec2(distance, 0)));
     bg2->runAction(MoveBy::create(0.04f, Vec2(distance, 0)));
+	Animate* moveAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("moveAnimation"));
+    player->runAction(moveAnimate);
     if (distance < 0) { // 人物向右走，背景向左移动
         if (bg1->getBoundingBox().getMaxX() <= 0)
             set_bg(1);
@@ -430,7 +431,6 @@ void GameScene::carrot3_animation() {
         auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 61, 1 * i + 20)));
         carrot1Animation->addSpriteFrame(frame);
     }
-    //设置萝卜3拔出的速度最慢
     carrot1Animation->setDelayPerUnit(0.05);
     AnimationCache::getInstance()->addAnimation(carrot1Animation, "carrot3Animation");
 }
@@ -438,7 +438,7 @@ void GameScene::carrot3_animation() {
 //初始化萝卜1
 Sprite* GameScene::carrot1_init() {
     auto texture = Director::getInstance()->getTextureCache()->addImage("carrot1.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 37, 20)));
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 37, 29)));
     auto carrot1 = Sprite::createWithSpriteFrame(frame);
     return carrot1;
 }
@@ -446,7 +446,7 @@ Sprite* GameScene::carrot1_init() {
 //初始化萝卜2
 Sprite* GameScene::carrot2_init() {
     auto texture = Director::getInstance()->getTextureCache()->addImage("carrot2.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 41, 20)));
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 41, 30)));
     auto carrot2 = Sprite::createWithSpriteFrame(frame);
     return carrot2;
 }
@@ -468,7 +468,7 @@ void GameScene::player_move() {
         auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(90 * i, 0, 90, 93)));
         moveAnimation->addSpriteFrame(frame);
     }
-    moveAnimation->setDelayPerUnit(1);
+    moveAnimation->setDelayPerUnit(0.2);
     AnimationCache::getInstance()->addAnimation(moveAnimation, "moveAnimation");
 }
 
