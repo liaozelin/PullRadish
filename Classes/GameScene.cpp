@@ -380,6 +380,7 @@ void GameScene::doOperation(char key_pressed) {
             operations[op_done_count]->setVisible(false);
             if (++op_done_count == op_count) {
                 score_increase();
+
                 //----------------------------------------------------------
                 // 在这里执行萝卜向上拔出的动画，执行动画结束后调用removeRadish()
                 removeRadish();
@@ -465,7 +466,7 @@ void GameScene::player_move() {
     auto texture1 = Director::getInstance()->getTextureCache()->addImage("player.png");
     for (int i = 0; i < 4; i++)
     {
-        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(90 * i, 0, 90, 93)));
+        auto frame = SpriteFrame::createWithTexture(texture1, CC_RECT_PIXELS_TO_POINTS(Rect(90 * i, 0, 90, 90)));
         moveAnimation->addSpriteFrame(frame);
     }
     moveAnimation->setDelayPerUnit(0.2);
@@ -475,7 +476,7 @@ void GameScene::player_move() {
 //初始化人物
 Sprite* GameScene::player_init() {
     auto texture = Director::getInstance()->getTextureCache()->addImage("player.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 90, 93)));
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 90, 90)));
     auto player1 = Sprite::createWithSpriteFrame(frame);
     return player1;
 }
