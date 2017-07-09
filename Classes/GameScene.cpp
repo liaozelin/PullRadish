@@ -439,7 +439,7 @@ void GameScene::carrot3_animation() {
 //初始化萝卜1
 Sprite* GameScene::carrot1_init() {
     auto texture = Director::getInstance()->getTextureCache()->addImage("carrot1.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 37, 29)));
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 37, 30)));
     auto carrot1 = Sprite::createWithSpriteFrame(frame);
     return carrot1;
 }
@@ -455,7 +455,7 @@ Sprite* GameScene::carrot2_init() {
 //初始化萝卜3
 Sprite* GameScene::carrot3_init() {
     auto texture = Director::getInstance()->getTextureCache()->addImage("carrot3.png");
-    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 61, 20)));
+    auto frame = SpriteFrame::createWithTexture(texture, CC_RECT_PIXELS_TO_POINTS(Rect(0, 0, 61, 30)));
     auto carrot3 = Sprite::createWithSpriteFrame(frame);
     return carrot3;
 }
