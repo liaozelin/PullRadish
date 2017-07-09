@@ -62,7 +62,7 @@ void MenuScene::menuItemStartCallback(Ref* pSender) {
 	MenuItem* item = (MenuItem*)pSender;
 	log("touch Setting %p", item);
 
-	auto sc = GameScene::createScene();
+	auto sc = GameScene::createScene(20, 1);
 	Director::getInstance()->pushScene(sc);
 }
 

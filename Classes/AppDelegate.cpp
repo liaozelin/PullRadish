@@ -1,8 +1,8 @@
 #include "AppDelegate.h"
 #include "GameScene.h"
+#include "MenuScene.h"
 
 USING_NS_CC;
-using namespace CocosDenshion;
 
 static cocos2d::Size designResolutionSize = cocos2d::Size(720, 480);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
@@ -52,7 +52,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->addSearchPath("res");
 
     // create a scene. it's an autorelease object
-    auto scene = GameScene::createScene();
+    auto scene = MenuScene::createScene();
 
     // run
     director->runWithScene(scene);
@@ -66,7 +66,6 @@ void AppDelegate::applicationDidEnterBackground() {
 
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-	SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
@@ -75,8 +74,4 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-	SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-
-	
-	
 }
